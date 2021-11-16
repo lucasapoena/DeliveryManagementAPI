@@ -21,6 +21,7 @@ namespace Infrastructure.Persistence.EF.Map
                 .IsRequired();
 
             builder.Property(x => x.ProductName)
+                .HasMaxLength(50)                
                 .IsRequired();
 
             builder.Property(x => x.ProductQty)
