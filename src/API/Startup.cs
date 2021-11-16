@@ -1,5 +1,6 @@
 using API.Extensions;
 using Application.Extensions;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,19 +12,20 @@ namespace API
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private readonly IConfiguration _configuration;
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-           // services.AddDatabaseMemory();
-            services.AddApplicationLayer();
+            services.AddDatabase(_configuration);
+            //services.AddDatabaseMemory();
+            services.AddApplicationLayer();            
+            services.AddRepositories();
+            services.RegisterSwagger();
             services.AddControllers();
-
-            services.RegisterSwagger();            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

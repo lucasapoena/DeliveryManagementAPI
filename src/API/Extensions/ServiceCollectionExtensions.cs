@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
@@ -12,7 +13,7 @@ namespace API.Extensions
     {
         internal static void RegisterSwagger(this IServiceCollection services)
         {
-            services.AddSwaggerGen(async c =>
+            services.AddSwaggerGen(c =>
             {
                 //TODO - Lowercase Swagger Documents
                 //c.DocumentFilter<LowercaseDocumentFilter>();
@@ -72,6 +73,13 @@ namespace API.Extensions
                 });
             });
         }
+
+        internal static IServiceCollection AddDatabase(
+            this IServiceCollection services,
+            IConfiguration configuration)
+            => services
+                .AddDbContext<ApiDBContext>(options => options
+                    .UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         internal static IServiceCollection AddDatabaseMemory(
             this IServiceCollection services)
