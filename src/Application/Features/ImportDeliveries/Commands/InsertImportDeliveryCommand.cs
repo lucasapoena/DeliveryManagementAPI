@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Shared.Wrapper;
 using System;
 
-namespace Application.Features.Deliveries.Commands
+namespace Application.Features.ImportDeliveries.Commands
 {
     public class InsertImportDeliveryCommand : IRequest<Result<Guid>>
     {        

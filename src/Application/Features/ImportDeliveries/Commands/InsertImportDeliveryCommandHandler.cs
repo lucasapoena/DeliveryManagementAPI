@@ -1,11 +1,10 @@
-﻿using Application.Features.Deliveries.Commands;
-using MediatR;
+﻿using MediatR;
 using Shared.Wrapper;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.Deliveries.Handlers
+namespace Application.Features.ImportDeliveries.Commands
 {
     public class InsertImportDeliveryCommandHandler : IRequestHandler<InsertImportDeliveryCommand, Result<Guid>>
     {
