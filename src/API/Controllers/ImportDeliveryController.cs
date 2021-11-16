@@ -1,4 +1,6 @@
-﻿using Application.Features.Deliveries.Commands;
+﻿using Application.Features.ImportDeliveries.Commands;
+using Application.Features.ImportDeliveries.Queries.GetAll;
+using Application.Features.ImportDeliveries.Queries.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,9 +42,8 @@ namespace API.Controllers
         [Route("GetAllImports")]
         public async Task<IActionResult> GetAllImports([FromServices] IMediator mediator)
         {
-            var imports = "";
-            //var imports = await mediator.Send(new GetAllDeliveriesImport());
-            return Ok(imports);
+            var result = await mediator.Send(new GetAllImportDeliveriesQuery());
+            return Ok(result);
         }
 
         /// <summary>
@@ -54,9 +55,8 @@ namespace API.Controllers
         [Route("GetById/{id}")]
         public async Task<IActionResult> GetById([FromServices] IMediator mediator, Guid id)
         {
-            var import = "";
-            //var import = await mediator.Send(new GetImportByIdQuery() { Id = id });
-            return Ok(import);
+            var result = await mediator.Send(new GetImportDeliveryByIdQuery() { Id = id });
+            return result.Succeeded ? Ok(result) : NotFound(result);
         }
     }
 }
