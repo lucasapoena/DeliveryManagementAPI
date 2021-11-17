@@ -90,6 +90,7 @@ namespace API.Extensions
         internal static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IExcelService, ExcelService>();
+            services.AddTransient<IUploadService, UploadService>();
             return services;
         }
     }

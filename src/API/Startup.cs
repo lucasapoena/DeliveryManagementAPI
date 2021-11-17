@@ -22,7 +22,8 @@ namespace API
             services.AddCors();
             //services.AddDatabase(_configuration);
             services.AddDatabaseMemory();
-            services.AddApplicationLayer();            
+            services.AddApplicationLayer();
+            services.AddApplicationServices();
             services.AddRepositories();
             services.RegisterSwagger();
             services.AddControllers();

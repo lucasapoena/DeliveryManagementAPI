@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Interfaces.Services;
+using MediatR;
 using OfficeOpenXml;
 using Shared.Wrapper;
 using System;
@@ -14,6 +15,11 @@ namespace Application.Features.ImportDeliveries.Commands
 {
     public class InsertImportDeliveryCommandHandler : IRequestHandler<InsertImportDeliveryCommand, Result<Guid>>
     {
+        private readonly IUploadService _uploadService;
+        public InsertImportDeliveryCommandHandler(IUploadService uploadService)
+        {
+            _uploadService = uploadService;
+        }
         public async Task<Result<Guid>> Handle(InsertImportDeliveryCommand command, CancellationToken cancellationToken)
         {
             var file = command.File;
@@ -22,7 +28,17 @@ namespace Application.Features.ImportDeliveries.Commands
 
             string fileExtension = Path.GetExtension(file.FileName);
             if (fileExtension != ".xls" && fileExtension != ".xlsx")
-                return await Result<Guid>.FailAsync("File Not Selected");            
+                return await Result<Guid>.FailAsync("File Not Selected");
+
+            //var folder = "ImportDeliveries";
+            //var folderName = Path.Combine("Files", folder);
+            //var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            //bool exists = System.IO.Directory.Exists(pathToSave);
+            //if (!exists)
+            //    System.IO.Directory.CreateDirectory(pathToSave);
+            //var fileName = file.FileName.Trim('"');
+            //var fullPath = Path.Combine(pathToSave, fileName);
+
 
             var rootFolder = @"C:\Files";
             var fileName = file.FileName;
@@ -36,6 +52,11 @@ namespace Application.Features.ImportDeliveries.Commands
 
             if (file.Length <= 0)
                 return await Result<Guid>.FailAsync("File Not Found");
+
+            _uploadService.UploadAsync(new Requests.UploadRequest { File = command.File});
+
+
+
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
