@@ -1,4 +1,6 @@
-﻿using Infrastructure.Persistence.EF;
+﻿using Application.Interfaces.Services;
+using Infrastructure.Persistence.EF;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -84,5 +86,11 @@ namespace API.Extensions
         internal static IServiceCollection AddDatabaseMemory(
             this IServiceCollection services)
             => services.AddDbContext<ApiDBContext>(opt => opt.UseInMemoryDatabase("db_api"));
+
+        internal static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        {
+            services.AddScoped<IExcelService, ExcelService>();
+            return services;
+        }
     }
 }
