@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>API</name>
+    </assembly>
+    <members>
+        <member name="T:API.Controllers.ImportDeliveryController">
+            <summary>
+            ImportDelivery Controller Class
+            </summary>
+        </member>
+        <member name="M:API.Controllers.ImportDeliveryController.Insert(MediatR.IMediator,Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Insert an import file
+            </summary>
+            <param name="mediator"></param>
+            <param name="file"></param>
+            <returns>Status 200 OK</returns>
+            <returns>Status 400 BadRequest</returns>
+        </member>
+        <member name="M:API.Controllers.ImportDeliveryController.GetAllImports(MediatR.IMediator)">
+            <summary>
+            Get All Import
+            </summary>
+            <returns>Status 200 Ok</returns>
+        </member>
+        <member name="M:API.Controllers.ImportDeliveryController.GetById(MediatR.IMediator,System.Guid)">
+            <summary>
+            Get a Import By Id
+            </summary>
+            <param name="id"></param>
+            <returns>Status 200 Ok</returns>
+        </member>
+    </members>
+</doc>
