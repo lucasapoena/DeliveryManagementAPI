@@ -21,6 +21,7 @@ namespace Infrastructure.Repositories
         public async Task<ImportDelivery> AddAsync(ImportDelivery entity)
         {
             await _dbContext.Set<ImportDelivery>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
             return entity;
         }
 

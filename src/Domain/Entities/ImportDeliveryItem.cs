@@ -11,6 +11,6 @@ namespace Domain.Entities
         public int ProductPrice { get; private set; }
 
         public ImportDelivery ImportDelivery { get; private set; }
-        public Guid ImportDeliveryId { get; private set; }
+        public Guid ImportDeliveryId { get; private set; }       
     }
 }

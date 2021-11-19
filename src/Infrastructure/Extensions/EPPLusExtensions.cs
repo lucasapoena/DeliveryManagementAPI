@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 /*
  * Extesion - EPPLusExtensions
@@ -14,7 +15,7 @@ namespace Infrastructure.Extensions
 {
     public static class EPPLusExtensions
     {
-        public static IEnumerable<T> ConvertSheetToObjects<T>(this ExcelWorksheet worksheet) where T : new()
+        public async static Task<IEnumerable<T>> ConvertSheetToObjectsAsync<T>(this ExcelWorksheet worksheet) where T : new()
         {
 
             Func<CustomAttributeData, bool> columnOnly = y => y.AttributeType == typeof(Application.Attributes.ExcelColumn);
@@ -72,9 +73,7 @@ namespace Infrastructure.Extensions
                     return tnew;
                 });
 
-
-            //Send it back
-            return collection;
+            return await Task.FromResult(collection); //Send it back            
         }
     }
 }

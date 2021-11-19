@@ -2,6 +2,7 @@
 using Infrastructure.Extensions;
 using OfficeOpenXml;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,15 +12,18 @@ namespace Infrastructure.Services
     {
         public async Task<IEnumerable<T>> ConvertXLSToObject<T>(string fileLocation) where T : new()
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-            IEnumerable<T> newcollection;
-            using (ExcelPackage package = new ExcelPackage(fileLocation))
+            IEnumerable<T> xlsCollection;
+            using (FileStream fileStream = new FileStream(fileLocation, FileMode.Open))
             {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelPackage package = new ExcelPackage(fileStream);
                 var workSheet = package.Workbook.Worksheets.FirstOrDefault();
-                newcollection = workSheet.ConvertSheetToObjects<T>();                
+                xlsCollection = await workSheet.ConvertSheetToObjectsAsync<T>();
             }
-            return newcollection;
+
+            return xlsCollection;
         }
     }
 }
+
+
