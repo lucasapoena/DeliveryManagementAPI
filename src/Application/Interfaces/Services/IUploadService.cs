@@ -1,9 +1,10 @@
 ﻿using Application.Requests;
+using System.Threading.Tasks;
 
 namespace Application.Interfaces.Services
 {
     public interface IUploadService
     {
-        string UploadAsync(UploadRequest request);
+        Task<string> UploadAsync(UploadRequest request);
     }
 }

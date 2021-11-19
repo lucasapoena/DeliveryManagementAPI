@@ -2,12 +2,13 @@
 using Application.Requests;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
     public class UploadService : IUploadService
     {
-        public string UploadAsync(UploadRequest request)
+        public async Task<string> UploadAsync(UploadRequest request)
         {
             var file = request.File;
             if (file == null || file.Length == 0) return string.Empty;
@@ -34,7 +35,7 @@ namespace Infrastructure.Services
 
                 using (var fileStream = new FileStream(fullPath, FileMode.Create))
                 {
-                    file.CopyToAsync(fileStream);
+                    await file.CopyToAsync(fileStream);
                 }
 
                 return dbPath;
