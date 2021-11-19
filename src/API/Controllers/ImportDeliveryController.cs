@@ -1,6 +1,7 @@
 ﻿using Application.Features.ImportDeliveries.Commands;
 using Application.Features.ImportDeliveries.Queries.GetAll;
 using Application.Features.ImportDeliveries.Queries.GetById;
+using Application.Interfaces.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,9 +28,16 @@ namespace API.Controllers
         [Route("Insert")]
         public async Task<IActionResult> Insert(
             [FromServices] IMediator mediator, 
-            IFormFile file)
+            [FromServices] IUploadRequest uploadRequest,
+            IFormFile file
+            )
         {
-            var result = await mediator.Send(new InsertImportDeliveryCommand { File = file });
+            uploadRequest.File = file;
+            var command = new InsertImportDeliveryCommand()
+            {
+                UploadRequest = uploadRequest
+            };
+            var result = await mediator.Send(command);            
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
 
