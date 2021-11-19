@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Features.ImportDeliveryItens.Commands;
+using Application.Interfaces.Services;
 using MediatR;
 using OfficeOpenXml;
 using Shared.Wrapper;
@@ -16,92 +17,27 @@ namespace Application.Features.ImportDeliveries.Commands
     public class InsertImportDeliveryCommandHandler : IRequestHandler<InsertImportDeliveryCommand, Result<Guid>>
     {
         private readonly IUploadService _uploadService;
-        public InsertImportDeliveryCommandHandler(IUploadService uploadService)
+        private readonly IExcelService _excelService;
+
+        public InsertImportDeliveryCommandHandler(IUploadService uploadService, IExcelService excelService)
         {
             _uploadService = uploadService;
+            _excelService = excelService;
         }
         public async Task<Result<Guid>> Handle(InsertImportDeliveryCommand command, CancellationToken cancellationToken)
-        {
-            var file = command.File;
-            if (file == null || file.Length == 0)
-                return await Result<Guid>.FailAsync("File Not Selected");
-
-            string fileExtension = Path.GetExtension(file.FileName);
-            if (fileExtension != ".xls" && fileExtension != ".xlsx")
-                return await Result<Guid>.FailAsync("File Not Selected");
-
-            //var folder = "ImportDeliveries";
-            //var folderName = Path.Combine("Files", folder);
-            //var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-            //bool exists = System.IO.Directory.Exists(pathToSave);
-            //if (!exists)
-            //    System.IO.Directory.CreateDirectory(pathToSave);
-            //var fileName = file.FileName.Trim('"');
-            //var fullPath = Path.Combine(pathToSave, fileName);
-
-
-            var rootFolder = @"C:\Files";
-            var fileName = file.FileName;
-            var filePath = Path.Combine(rootFolder, fileName);
-            var fileLocation = new FileInfo(filePath);
-
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+        {            
+            var fileLocation = _uploadService.UploadAsync(new Requests.UploadRequest { File = command.UploadRequest.File });
+            if (string.IsNullOrEmpty(fileLocation))
             {
-                await file.CopyToAsync(fileStream);
+                return await Result<Guid>.FailAsync("O arquivo enviado é inválido!");
             }
+            else
+            {                
 
-            if (file.Length <= 0)
-                return await Result<Guid>.FailAsync("File Not Found");
-
-            _uploadService.UploadAsync(new Requests.UploadRequest { File = command.File});
-
-
-
-
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-            using (ExcelPackage package = new ExcelPackage(fileLocation))
-            {
-                var workSheet = package.Workbook.Worksheets.FirstOrDefault();
-                int totalRows = workSheet.Dimension.Rows;
-
-                var DataList = new List<ExcelResourceDto>();
-
-                for (int i = 2; i <= totalRows; i++)
-                {
-                    DataList.Add(new ExcelResourceDto
-                    {
-                        DataEntrega = workSheet.Cells[i, 1].Value.ToString(),
-                        NomeProduto = workSheet.Cells[i, 2].Value.ToString(),
-                        Quantidade = workSheet.Cells[i, 3].Value.ToString(),
-                        ValorUnitario = workSheet.Cells[i, 4].Value.ToString()
-                    });
-                }
-            }
-
-
-
-
-            return await Result<Guid>.SuccessAsync("teste");
-        }
-
-        public class ExcelResourceDto
-        {
-            [Column("1")]
-            [Required]
-            public string DataEntrega { get; set; }
-
-            [Column("2")]
-            [Required]
-            public string NomeProduto { get; set; }
-
-            [Column("3")]
-            [Required]
-            public string Quantidade { get; set; }
-
-            [Column("4")]
-            [Required]
-            public string ValorUnitario { get; set; }
-        }
+                var teste = await _excelService.ConvertXLSToObject<ImportDeliveryItemCommand>(fileLocation);
+                var teste2 = teste.ToList();
+                return await Result<Guid>.SuccessAsync("teste");                               
+            }                         
+        }       
     }
 }
