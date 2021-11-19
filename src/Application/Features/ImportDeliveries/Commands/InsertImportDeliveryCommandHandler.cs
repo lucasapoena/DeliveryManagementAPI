@@ -1,13 +1,8 @@
 ﻿using Application.Features.ImportDeliveryItens.Commands;
 using Application.Interfaces.Services;
 using MediatR;
-using OfficeOpenXml;
 using Shared.Wrapper;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,7 +21,7 @@ namespace Application.Features.ImportDeliveries.Commands
         }
         public async Task<Result<Guid>> Handle(InsertImportDeliveryCommand command, CancellationToken cancellationToken)
         {            
-            var fileLocation = _uploadService.UploadAsync(new Requests.UploadRequest { File = command.UploadRequest.File });
+            var fileLocation = await _uploadService.UploadAsync(new Requests.UploadRequest { File = command.UploadRequest.File });
             if (string.IsNullOrEmpty(fileLocation))
             {
                 return await Result<Guid>.FailAsync("O arquivo enviado é inválido!");
