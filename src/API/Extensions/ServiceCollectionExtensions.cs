@@ -1,4 +1,8 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Configurations;
+using Application.Interfaces.Requests;
+using Application.Interfaces.Services;
+using Application.Requests;
+using FluentValidation.AspNetCore;
 using Infrastructure.Persistence.EF;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -92,6 +96,27 @@ namespace API.Extensions
             services.AddScoped<IExcelService, ExcelService>();
             services.AddTransient<IUploadService, UploadService>();
             return services;
+        }
+
+        internal static IServiceCollection AddApplicationRequests(this IServiceCollection services)
+        {
+            services.AddTransient<IUploadRequest, UploadRequest>();
+            return services;
+        }
+
+        internal static IMvcBuilder AddValidators(this IMvcBuilder builder)
+        {
+            builder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AppConfiguration>());
+            return builder;
+        }
+
+        internal static AppConfiguration GetApplicationSettings(
+         this IServiceCollection services,
+         IConfiguration configuration)
+        {
+            var applicationSettingsConfiguration = configuration.GetSection(nameof(AppConfiguration));
+            services.Configure<AppConfiguration>(applicationSettingsConfiguration);
+            return applicationSettingsConfiguration.Get<AppConfiguration>();
         }
     }
 }
