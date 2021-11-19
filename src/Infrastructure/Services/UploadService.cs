@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Services;
 using Application.Requests;
+using System;
 using System.IO;
 
 namespace Infrastructure.Services
@@ -22,7 +23,7 @@ namespace Infrastructure.Services
                 bool exists = System.IO.Directory.Exists(pathToSave);
                 if (!exists)
                     System.IO.Directory.CreateDirectory(pathToSave);
-                var fileName = file.FileName.Trim('"');
+                var fileName = $"D-{Guid.NewGuid()}-{file.FileName.Trim('"')}";
                 var fullPath = Path.Combine(pathToSave, fileName);
                 var dbPath = Path.Combine(folderName, fileName);
                 if (File.Exists(dbPath))
