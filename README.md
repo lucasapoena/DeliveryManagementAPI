@@ -1,28 +1,30 @@
 # DeliveryManagementAPI
 
-## DescriÁ„o
+## Descri√ß√£o
 Delivery Management API - Capgemini
 
 ## Tecnologias utilizadas
 
-Exemplo:
 
 > Para o desenvolvimento do projeto foi utilizada as seguintes tecnologias:
 
 > - ::technologist:: 
--- **.NET Core 5**
--- **EF Core, FluentValidation**
--- **SQL Server**
+
+- **.NET Core 5**
+- **EF Core, FluentValidation, MediatR**
+- **SQL Server**
+
+A estrutura proposta foi direcionada aos conceitos da Clean Architeture, com o foco da separa√ß√£o das respons√°bilidades
 
 
-## PrÈ-Requisitos
+## Pr√©-Requisitos
 - SQL Server
 - .Net SDK 5~ 
 
-## InstalaÁ„o e Uso
+## Instala√ß√£o e Uso
 
 ```
-# Clone o repositÛrio
+# Clone o reposit√≥rio
 git clone git@github.com:lucasapoena/DeliveryManagementAPI.git
 
 ```
