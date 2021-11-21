@@ -29,6 +29,7 @@ namespace Infrastructure.Repositories
         {    
             return await _dbContext
                 .Set<ImportDelivery>()
+                .OrderBy(x => x.ImportDate)
                 .ToListAsync();
         }
 

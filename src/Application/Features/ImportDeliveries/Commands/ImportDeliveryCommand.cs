@@ -25,7 +25,7 @@ namespace Application.Features.ImportDeliveries.Commands
             ImportDate = DateTime.UtcNow;
             TotalItens = importDeliveryItens.Sum(x => x.ProductQty);
             MinimalDeliveryDate = importDeliveryItens.Min(x => x.DeliveryDate);
-            TotalDeliveryItens = importDeliveryItens.Sum(x => x.ProductPrice * x.ProductQty);            
+            TotalDeliveryItens = Math.Round(importDeliveryItens.Sum(x => x.ProductPrice * x.ProductQty), 2);            
         }
     }
 }
