@@ -20,8 +20,8 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            //services.AddDatabase(_configuration);
-            services.AddDatabaseMemory();
+            services.AddDatabase(_configuration);
+            //services.AddDatabaseMemory();
             services.AddApplicationLayer();
             services.AddApplicationServices();
             services.AddApplicationRequests();
