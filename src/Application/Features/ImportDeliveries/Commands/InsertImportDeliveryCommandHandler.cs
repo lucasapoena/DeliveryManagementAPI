@@ -65,11 +65,7 @@ namespace Application.Features.ImportDeliveries.Commands
                     return await Result<Guid>.FailAsync(invalidItensErrors);
                 }
                 else
-                {
-                    var importDate = DateTime.UtcNow;
-                    var totalItens = importDeliveryItens.Sum(x => x.ProductQty);
-                    var minimalDeliveryDate = importDeliveryItens.Min(x => x.DeliveryDate);
-                    var totalDeliveryItens = importDeliveryItens.Sum(x => x.ProductPrice * x.ProductQty);               
+                {            
                     var importDeliveryCommand = new ImportDeliveryCommand(importDeliveryItens.ToList());
                     var importDelivery = _mapper.Map<ImportDelivery>(importDeliveryCommand);
 
