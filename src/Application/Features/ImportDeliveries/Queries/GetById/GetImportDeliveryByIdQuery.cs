@@ -1,38 +1,54 @@
 ﻿using Application.Interfaces.Repositories;
-using AutoMapper;
+using Application.Interfaces.Services;
+using Domain.Entities;
 using MediatR;
 using Shared.Wrapper;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Features.ImportDeliveries.Queries.GetById
 {
-    public class GetImportDeliveryByIdQuery : IRequest<Result<GetImportDeliveryByIdResponse>>
+    public class GetImportDeliveryByIdQuery : IRequest<Result<string>>
     {
         public Guid Id { get; set; }
     }
 
-    internal class GetImportDeliveryByIdQueryHandler : IRequestHandler<GetImportDeliveryByIdQuery, Result<GetImportDeliveryByIdResponse>>
+    internal class GetImportDeliveryByIdQueryHandler : IRequestHandler<GetImportDeliveryByIdQuery, Result<string>>
     {
-        private readonly IImportDeliveryRepository _repository;
-        private readonly IMapper _mapper;
+        private readonly IExcelService _excelService;
+        private readonly IImportDeliveryRepository _repository; 
 
-        public GetImportDeliveryByIdQueryHandler(IImportDeliveryRepository repository, IMapper mapper)
+        public GetImportDeliveryByIdQueryHandler(IExcelService excelService, IImportDeliveryRepository repository)
         {
+            _excelService = excelService;
             _repository = repository;
-            _mapper = mapper;
         }
 
-        public async Task<Result<GetImportDeliveryByIdResponse>> Handle(GetImportDeliveryByIdQuery query, CancellationToken cancellationToken)
+        public async Task<Result<string>> Handle(GetImportDeliveryByIdQuery query, CancellationToken cancellationToken)
         {
             var importDelivery = await _repository.GetByIdAsync(query.Id);
-            var mappedImportDelivery = _mapper.Map<GetImportDeliveryByIdResponse>(importDelivery);
-            if (mappedImportDelivery == null)
+            if (importDelivery == null)
             {
-                return await Result<GetImportDeliveryByIdResponse>.FailAsync("Não existe importação cadastrada com o ID informado!");
+                return await Result<string>.FailAsync("There is no registered import with registered ID!");
             }
-            return await Result<GetImportDeliveryByIdResponse>.SuccessAsync(mappedImportDelivery);
+            else
+            {
+                var dataItens = importDelivery.ImportDeliveryItens;
+                var data = await _excelService.ExportAsync(
+                    dataItens, 
+                    mappers: new Dictionary<string, Func<ImportDeliveryItem, object>>
+                    {
+                        { "DeliveryDate", item => item.DeliveryDate.ToString("dd/MM/yyyy") },
+                        { "ProductName", item => item.ProductName },
+                        { "ProductQty", item => item.ProductQty },
+                        { "ProductPrice", item => item.ProductPrice},
+                        { "TotalPrice", item => item.TotalPrice}
+                    }, sheetName: "ImportDeliveryItens");
+
+                return await Result<string>.SuccessAsync(data: data);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Domain.Contracts;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
@@ -22,9 +23,12 @@ namespace Domain.Entities
         public DateTime DeliveryDate { get; private set; }
         public string ProductName { get; private set; }
         public int ProductQty { get; private set; }
-        public int ProductPrice { get; private set; }
+        public double ProductPrice { get; private set; }
 
         public ImportDelivery ImportDelivery { get; private set; }
-        public Guid ImportDeliveryId { get; private set; }       
+        public Guid ImportDeliveryId { get; private set; }
+
+        [NotMapped]
+        public double TotalPrice => ProductQty * ProductPrice;
     }
 }

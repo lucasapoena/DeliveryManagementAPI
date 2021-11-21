@@ -44,6 +44,9 @@ Pronto basta acessar:
 https://localhost:5001/swagger/index.html
 
 
+#####
+[Converter Base64 em Arquivo](https://emn178.github.io/online-tools/base64_decode_file.html)
+
 
 
 

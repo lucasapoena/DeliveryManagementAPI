@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Infrastructure.Repositories
 {
@@ -34,6 +35,14 @@ namespace Infrastructure.Repositories
         public async Task<ImportDeliveryItem> GetByIdAsync(Guid id)
         {
             return await _dbContext.Set<ImportDeliveryItem>().FindAsync(id);
+        }
+
+        public async Task<List<ImportDeliveryItem>> GetAllByImportDeliveryIdAsync(Guid id)
+        {
+            return await _dbContext
+                 .Set<ImportDeliveryItem>()
+                 .Where(x => x.ImportDeliveryId == id)                 
+                 .ToListAsync();
         }
     }
 }

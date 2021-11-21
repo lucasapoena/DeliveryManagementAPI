@@ -35,7 +35,10 @@ namespace Infrastructure.Repositories
 
         public async Task<ImportDelivery> GetByIdAsync(Guid id)
         {
-            return await _dbContext.Set<ImportDelivery>().FindAsync(id);
+            return await _dbContext
+                .Set<ImportDelivery>()
+                .Include(x => x.ImportDeliveryItens)
+                .FirstOrDefaultAsync(x => x.Id == id);              
         }
     }
 }
