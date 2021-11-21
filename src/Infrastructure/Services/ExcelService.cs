@@ -10,7 +10,7 @@ namespace Infrastructure.Services
 {
     public class ExcelService : IExcelService
     {
-        public async Task<IEnumerable<T>> ConvertXLSToObject<T>(string fileLocation) where T : new()
+        public async Task<IEnumerable<T>> ConvertXLSToObjectAsync<T>(string fileLocation) where T : new()
         {
             IEnumerable<T> xlsCollection;
             using (FileStream fileStream = new FileStream(fileLocation, FileMode.Open))

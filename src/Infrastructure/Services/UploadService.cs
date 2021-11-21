@@ -65,8 +65,6 @@ namespace Infrastructure.Services
         private static string GetNextFilename(string pattern)
         {
             string tmp = string.Format(pattern, 1);
-            //if (tmp == pattern)
-            //throw new ArgumentException("The pattern must include an index place-holder", "pattern");
 
             if (!File.Exists(tmp))
                 return tmp; // short-circuit if no matches

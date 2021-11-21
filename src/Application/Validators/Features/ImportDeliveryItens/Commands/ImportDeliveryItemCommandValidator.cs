@@ -8,21 +8,23 @@ namespace Application.Validators.Features.ImportDeliveryItens.Commands
     {
         public ImportDeliveryItemCommandValidator()
         {
-            RuleFor(request => request.DeliveryDate)
-                .Must(x => x.Date >= DateTime.Today)
-                .WithMessage("Data de entrega é obrigatória!");
+            RuleFor(x => x.DeliveryDate).NotNull().WithMessage("Delivery Date is required");
+            RuleFor(x => x.DeliveryDate).Must(x => x.Date >= DateTime.Today)
+                .WithMessage("Delivery date must be greater than or equal to the current date!");
+            
+            RuleFor(x => x.ProductName)
+                .Must(x => !string.IsNullOrWhiteSpace(x)).WithMessage("Product name is required!")
+                .MaximumLength(50).WithMessage("Product name must have a maximum of 50 characters!");
 
-            RuleFor(request => request.ProductName)
-              .Must(x => !string.IsNullOrWhiteSpace(x)).WithMessage("Nome do produto é obrigatório!")
-              .MaximumLength(50).WithMessage("Nome do produto deve possuir no máximo 50 caracters!");
+            RuleFor(x => x.ProductQty)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage("Quantity cannot equal 0!");
 
-            RuleFor(request => request.ProductQty)
-             .NotEmpty()
-             .WithMessage("A quantidade não pode ser igual a 0!");
-
-            RuleFor(request => request.ProductPrice)
-             .NotEmpty()
-             .WithMessage("O preço não pode ser igual a 0!");
+            RuleFor(x => x.ProductPrice)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage("Price cannot be equal to 0!");
         }
 
     }    

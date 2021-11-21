@@ -16,36 +16,35 @@ namespace Application.Features.ImportDeliveries.Commands
 {
     public class InsertImportDeliveryCommandHandler : IRequestHandler<InsertImportDeliveryCommand, Result<Guid>>
     {
+        const int INITIAL_LINE_XLS = 2;
+
         private readonly IMapper _mapper;
         private readonly IUploadService _uploadService;
         private readonly IExcelService _excelService;
-        private readonly IImportDeliveryRepository _importDeliveryRepository;
-        private readonly IImportDeliveryItemRepository _importDeliveryItemRepository;
+        private readonly IImportDeliveryRepository _importDeliveryRepository;        
 
         public InsertImportDeliveryCommandHandler(
             IMapper mapper,
             IUploadService uploadService,
             IExcelService excelService,
-            IImportDeliveryRepository importDeliveryRepository,
-            IImportDeliveryItemRepository importDeliveryItemRepository
+            IImportDeliveryRepository importDeliveryRepository
         )
         {
             _mapper = mapper;
             _uploadService = uploadService;
             _excelService = excelService;
             _importDeliveryRepository = importDeliveryRepository;
-            _importDeliveryItemRepository = importDeliveryItemRepository;
         }
         public async Task<Result<Guid>> Handle(InsertImportDeliveryCommand command, CancellationToken cancellationToken)
         {
             var fileLocation = await _uploadService.UploadAsync(new Requests.UploadRequest { File = command.UploadRequest.File });
             if (!string.IsNullOrEmpty(fileLocation))
             {
-                var importDeliveryItens = await _excelService.ConvertXLSToObject<ImportDeliveryItemCommand>(fileLocation);
+                var importDeliveryItens = await _excelService.ConvertXLSToObjectAsync<ImportDeliveryItemCommand>(fileLocation);
                 var validator = new ImportDeliveryItemCommandValidator();
                 List<string> invalidItensErrors = new();
 
-                var lineXLS = 2;
+                var lineXLS = INITIAL_LINE_XLS;
                 foreach (var importDeliveryItem in importDeliveryItens)
                 {
                     var result = validator.Validate(importDeliveryItem);
@@ -70,9 +69,9 @@ namespace Application.Features.ImportDeliveries.Commands
                     var importDate = DateTime.UtcNow;
                     var totalItens = importDeliveryItens.Sum(x => x.ProductQty);
                     var minimalDeliveryDate = importDeliveryItens.Min(x => x.DeliveryDate);
-                    var totalDeliveryItens = importDeliveryItens.Sum(x => x.ProductPrice * x.ProductQty);
-
-                    var importDelivery = new ImportDelivery(importDate, totalItens, minimalDeliveryDate, totalDeliveryItens);
+                    var totalDeliveryItens = importDeliveryItens.Sum(x => x.ProductPrice * x.ProductQty);               
+                    var importDeliveryCommand = new ImportDeliveryCommand(importDeliveryItens.ToList());
+                    var importDelivery = _mapper.Map<ImportDelivery>(importDeliveryCommand);
 
                     var model = await _importDeliveryRepository.AddAsync(importDelivery);
                     return await Result<Guid>.SuccessAsync(model.Id, "Dados importados com sucesso!");

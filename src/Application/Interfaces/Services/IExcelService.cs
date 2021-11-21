@@ -5,6 +5,6 @@ namespace Application.Interfaces.Services
 {
     public interface IExcelService
     {
-        Task<IEnumerable<T>> ConvertXLSToObject<T>(string fileLocation) where T : new();
+        Task<IEnumerable<T>> ConvertXLSToObjectAsync<T>(string fileLocation) where T : new();
     }
 }

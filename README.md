@@ -29,21 +29,13 @@ git clone git@github.com:lucasapoena/DeliveryManagementAPI.git
 
 ```
 
-Realize a cria??o da base de dados no SQL Server
+# Executando o projeto
+
+Acesse a pasta do projeto API e execute: 
 
 ```
-CREATE DATABASE DeliveryManagementAPI;
-```
+cd ..\DeliveryManagementAPI\src\API
 
-Pelo terminal, Acesse a pasta do projeto e aplica as Migrations
-
-```
-dotnet ef database update
-```
-
-Execute o projeto, acesse a pasta do projeto API e execute: 
-
-```
 dotnet run
 ```
 
