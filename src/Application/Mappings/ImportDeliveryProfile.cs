@@ -10,7 +10,7 @@ namespace Application.Mappings
     {
         public ImportDeliveryProfile()
         {
-            CreateMap<InsertImportDeliveryCommand, ImportDelivery>().ReverseMap();
+            CreateMap<ImportDeliveryCommand, ImportDelivery>().ReverseMap();
             CreateMap<GetImportDeliveryByIdResponse, ImportDelivery>().ReverseMap();
             CreateMap<GetAllImportDeliveriesResponse, ImportDelivery>().ReverseMap();
         }

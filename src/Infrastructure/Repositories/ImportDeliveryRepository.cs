@@ -21,6 +21,7 @@ namespace Infrastructure.Repositories
         public async Task<ImportDelivery> AddAsync(ImportDelivery entity)
         {
             await _dbContext.Set<ImportDelivery>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
             return entity;
         }
 
@@ -28,12 +29,16 @@ namespace Infrastructure.Repositories
         {    
             return await _dbContext
                 .Set<ImportDelivery>()
+                .OrderBy(x => x.ImportDate)
                 .ToListAsync();
         }
 
         public async Task<ImportDelivery> GetByIdAsync(Guid id)
         {
-            return await _dbContext.Set<ImportDelivery>().FindAsync(id);
+            return await _dbContext
+                .Set<ImportDelivery>()
+                .Include(x => x.ImportDeliveryItens)
+                .FirstOrDefaultAsync(x => x.Id == id);              
         }
     }
 }

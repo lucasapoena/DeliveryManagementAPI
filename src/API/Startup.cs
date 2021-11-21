@@ -22,10 +22,12 @@ namespace API
             services.AddCors();
             services.AddDatabase(_configuration);
             //services.AddDatabaseMemory();
-            services.AddApplicationLayer();            
+            services.AddApplicationLayer();
+            services.AddApplicationServices();
+            services.AddApplicationRequests();
             services.AddRepositories();
             services.RegisterSwagger();
-            services.AddControllers();
+            services.AddControllers().AddValidators();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
